@@ -17,6 +17,7 @@
                         <div class="card-body">
                             <h5 class="card-title">Phone Number</h5>
                             <p class="card-text">{{ $phone->mobilephone }}</p>
+                            <p class="card-text">{{ $phone->user->name }}</p>   {{-- using user function from Phone model --}}
                             <div class="d-flex justify-content-around">
                                 <a href="{{ route('phones.edit', $phone->id) }}" class="btn btn-warning">Edit</a>
                                 {!! Form::open(['route' => ['phones.destroy', $phone->id], 'method' => 'DELETE']) !!}
