@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Phone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\PhoneRequest;
 
 class PhoneController extends Controller
 {
@@ -15,9 +16,11 @@ class PhoneController extends Controller
      */
     public function index()
     {
-        $phones = Phone::all();
+        // get user phones
+        // return view('phones.index', ['phones' => Phone::where('user_id', auth()->id())->get()]);
 
-        return view('phones.index', ['phones' => $phones]);
+        // get user phones using one to many relation
+        return view('phones.index', ['phones' => Auth::user()->phones]);
     }
 
     /**
@@ -36,13 +39,26 @@ class PhoneController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PhoneRequest $request)
     {
+
+        // validation before using request
+        // $validated = $request->validate([
+        //     'mobilephone' => 'required|unique:phones|numeric|starts_with:010,011,012,015',
+        // ]);
+
+        // store in database
         $phone = new Phone();
         $phone->mobilephone = $request->mobilephone;
         $phone->user_id = Auth::id();
         if($phone->save()){
+
+            // for flash session for one request
+            session()->flash('success', 'Mobile phone has been added successfully!');
             return redirect()->route('phones.index');
+
+            // for session 3ady
+            // return redirect()->route('phones.index')->with('success', 'Mobile phone added successfully!');
         }
         else{
             return redirect()->route('phones.store');
@@ -79,8 +95,9 @@ class PhoneController extends Controller
      * @param  \App\Models\Phone  $phone
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PhoneRequest $request, $id)
     {
+        // update row in database
         $phone = Phone::find($id);
         $phone->mobilephone = $request->mobilephone;
         if($phone->save()) {
@@ -88,7 +105,6 @@ class PhoneController extends Controller
         } else {
             return redirect()->back();
         }
-        // return view('phones.update', ['phone' => Phone::find($id)]);
     }
 
     /**

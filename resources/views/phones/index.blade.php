@@ -2,6 +2,12 @@
 
 @section('content')
     <div class="container">
+        @if (session('success'))
+            <div class="alert alert-success" role="alert">
+                {{ session('success') }}
+            </div>
+        @endif
+
         <a href="{{ route('phones.create') }}" class="btn btn-primary">Add Phone</a>
 
         <div class="row">
