@@ -51,6 +51,12 @@ class PhoneController extends Controller
         //     'mobilephone' => 'required|unique:phones|numeric|starts_with:010,011,012,015',
         // ]);
 
+
+        // authorization of one person => go to policy in create to understand
+        // if (Auth::user()->cannot('create', Phone::class)) {
+        //     abort(403);
+        // }
+
         // store in database
         $phone = new Phone($request->all());
         // $phone->mobilephone = $request->mobilephone;
@@ -92,8 +98,18 @@ class PhoneController extends Controller
      */
     public function edit($id)
     {
-        // dd(Phone::find($id));
-        return view('phones.edit', ['phone' => Phone::find($id)]);
+        $phone = Phone::find($id);
+
+        // check authorization    first way
+        // if (Auth::user()->cannot('update', $phone)) {
+        //     abort(403);
+        // }
+
+        // authorization in one line second way
+        $this->authorize('update', $phone);
+
+        return view('phones.edit', ['phone' => $phone]);
+        // return view('phones.edit', ['phone' => Phone::find($id)]);
     }
 
     /**
@@ -107,6 +123,15 @@ class PhoneController extends Controller
     {
         // update row in database
         $phone = Phone::find($id);
+
+        // check authorization first way
+        // if(Auth::user()->cannot('update', $phone)){
+        //     abort(403);
+        // }
+
+        // authorization in one line second way
+        $this->authorize('update', $phone);
+
         $phone->mobilephone = $request->mobilephone;
 
         if($phone->save()) {
@@ -124,7 +149,17 @@ class PhoneController extends Controller
      */
     public function destroy($id)
     {
-        Phone::find($id)->delete();
+        $phone = Phone::find($id);
+
+        // check authorization   first way
+        // if(Auth::user()->cannot('delete', $phone)){            // (auth()->user()->cannot('delete', $phone)) == (Auth::user()->cannot('delete', $phone))
+        //     abort(403);
+        // }
+
+        // authorization in one line second way
+        $this->authorize('delete', $phone);
+
+        $phone->delete();
         return redirect()->route('phones.index');
     }
 }

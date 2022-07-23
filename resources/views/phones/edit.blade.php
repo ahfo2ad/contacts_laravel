@@ -8,8 +8,8 @@
                 {{ $error }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-
         @endforeach
+        
         {!! Form::model($phone, ['route' => ['phones.update', $phone->id], 'method' => 'PUT']) !!}
             <div class="mb-3">
                 {!! Form::label('hello', 'mobilephone', ['class'=>'form-label']) !!}
