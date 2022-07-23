@@ -16,6 +16,10 @@ class PhoneController extends Controller
      */
     public function index()
     {
+
+        // get all phones for all users
+        // return view('phones.index', ['phones' => Phone::all()]);
+
         // get user phones
         // return view('phones.index', ['phones' => Phone::where('user_id', auth()->id())->get()]);
 
@@ -48,9 +52,13 @@ class PhoneController extends Controller
         // ]);
 
         // store in database
-        $phone = new Phone();
-        $phone->mobilephone = $request->mobilephone;
+        $phone = new Phone($request->all());
+        // $phone->mobilephone = $request->mobilephone;
         $phone->user_id = Auth::id();
+
+        // storing data in one line
+            // $phone = Auth::user()->phones()->create($request->all());
+
         if($phone->save()){
 
             // for flash session for one request
@@ -100,6 +108,7 @@ class PhoneController extends Controller
         // update row in database
         $phone = Phone::find($id);
         $phone->mobilephone = $request->mobilephone;
+
         if($phone->save()) {
             return redirect()->route('phones.index');
         } else {

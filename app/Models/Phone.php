@@ -11,6 +11,9 @@ class Phone extends Model
     use HasFactory;
     use SoftDeletes;
 
+    // for mass assignment
+    protected $fillable = ['mobilephone'];
+
     public function user() {
         return $this->belongsTo(User::class);
     }
